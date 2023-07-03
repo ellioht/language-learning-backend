@@ -19,3 +19,5 @@ router.delete('/words/:id', words.deleteWordById);
 
 // get random word
 router.get('/words/random', words.getRandomWord);
+
+module.exports = router;
