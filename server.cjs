@@ -68,3 +68,16 @@ app.get('/words', async (req, res) => {
     return res.status(500).json({ error: 'Failed to get all words data.' });
   }
 });
+
+// get a random word in database
+app.get('/words/random', async (req, res) => {
+  try {
+    const count = await Word.countDocuments();
+    const random = Math.floor(Math.random() * count);
+    const word = await Word.findOne().skip(random);
+    return res.status(200).json({ word });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Failed to get a random word.' });
+  }
+});
