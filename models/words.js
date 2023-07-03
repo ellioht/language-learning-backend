@@ -8,7 +8,6 @@ const wordsSchema = new mongoose.Schema({
           word: {
             type: String,
             required: true,
-            unique: true,
             trim: true,
             minlength: 3
           },
