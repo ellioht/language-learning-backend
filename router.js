@@ -9,15 +9,15 @@ router.get('/words', words.getAllWords);
 router.post('/words', words.postWord);
 
 // post multiple words
-// router.post('/words/bulk', words.postMultipleWords);
+router.post('/words/bulk', words.postMultipleWords);
 
 // delete all words
-// router.delete('/words', words.deleteAllWords);
+router.delete('/words', words.deleteAllWords);
 
 // delete a word by id
-// router.delete('/words/:id', words.deleteWordById);
+router.delete('/words/:id', words.deleteWordById);
 
 // get random word
-// router.get('/words/random', words.getRandomWord);
+router.get('/words/random', words.getRandomWord);
 
 module.exports = router;
