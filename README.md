@@ -1,8 +1,13 @@
 ﻿### Language Learning App Back-end
  # Words schema:
  { 
+ <br />
  language
-   word
-   definition
-   example
+ <br />
+ --word
+ <br />
+ --definition
+ <br />
+ --example
+ <br />
  }
