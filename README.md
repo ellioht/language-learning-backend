@@ -2,7 +2,7 @@
  # Words schema:
  { 
  <br />
- language
+ language {
  <br />
  --word
  <br />
@@ -10,4 +10,6 @@
  <br />
  --example
  <br />
+ --}
+  <br />
  }
