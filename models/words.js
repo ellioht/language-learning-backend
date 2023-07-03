@@ -1,53 +1,155 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const wordsSchema = new mongoose.Schema({
-  word: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-    minlength: 3,
-  },
-  definition: {
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 3,
-  },
-  example: {
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 3,
-  },
-  translation: {
+  language: {
     type: {
+      english: {
+        type: {
+          word: {
+            type: String,
+            required: true,
+            unique: true,
+            trim: true,
+            minlength: 3
+          },
+          definition: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          example: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+        },
+        required: true,
+        trim: true,
+        minlength: 3,
+      },
       spanish: {
-        type: String,
+        type: {
+          word: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          definition: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          example: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+        },
         required: true,
         trim: true,
         minlength: 3,
       },
       french: {
-        type: String,
+        type: {
+          word: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          definition: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          example: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+        },
         required: true,
         trim: true,
         minlength: 3,
       },
       german: {
-        type: String,
+        type: {
+          word: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          definition: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          example: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+        },
         required: true,
         trim: true,
         minlength: 3,
       },
       italian: {
-        type: String,
+        type: {
+          word: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          definition: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          example: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+        },
         required: true,
         trim: true,
         minlength: 3,
       },
       portuguese: {
-        type: String,
+        type: {
+          word: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          definition: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+          example: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: 3,
+          },
+        },
         required: true,
         trim: true,
         minlength: 3,
@@ -57,5 +159,6 @@ const wordsSchema = new mongoose.Schema({
   },
 });
 
-const Words = mongoose.model('Words', wordsSchema);
+
+const Words = mongoose.model("Words", wordsSchema);
 module.exports = Words;
