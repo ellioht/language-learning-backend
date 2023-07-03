@@ -4,12 +4,12 @@
  <br />
  language {
  <br />
- --word
+ -- word
  <br />
- --definition
+ -- definition
  <br />
- --example
+ -- example
  <br />
- --}
+ -- }
   <br />
  }
