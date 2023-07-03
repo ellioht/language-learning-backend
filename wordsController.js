@@ -1,6 +1,6 @@
 const createError = require("http-errors");
 
-const Word = require("./models/words.js");
+const { Word } = require("./models/words.js");
 
 // get all words
 exports.getAllWords = async (req, res, next) => {
