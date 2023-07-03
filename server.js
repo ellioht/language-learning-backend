@@ -4,8 +4,7 @@ const app = express();
 const port = process.env.PORT || 3001;
 const connectToDatabase = require("./Mongo.cjs");
 const createError = require("http-errors");
-
-const Word = require("./models/words.js");
+const bodyParser = require('body-parser');
 
 connectToDatabase()
   .then(() => {
@@ -20,6 +19,8 @@ connectToDatabase()
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(bodyParser.json());
 
 app.use("/api", require("./router.js"));
 
