@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const words = require('./wordsController.js');
+const review = require('./reviewController.js');
 
 // WORDS
 
@@ -25,9 +26,9 @@ router.get('/words/random', words.getRandomWord);
 // REVIEWS
 
 // get all review words
-router.get('/review', words.getAllReviewWords);
+router.get('/review', review.getAllReviewWords);
 
 // post review words
-router.post('/review', words.postReviewWords);
+router.post('/review', review.postReviewWords);
 
 module.exports = router;
