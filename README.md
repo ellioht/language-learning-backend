@@ -9,5 +9,5 @@ https://github.com/CodeByCalvin/languagelearningapp-frontend-
 - Word of the day using back-end word data
 - Review, a game like mode for practicing your language learning skills. This game has multiple modes such as true or false, multiple choice, and match the word.
 - User settings.
-# Media: (in development)
+### Media: (in development)
 ![chrome_dwvxhXIj6x](https://github.com/ellioht/language-learning-backend/assets/130664947/637daa8f-2788-4940-980b-127b7946a2b4)
