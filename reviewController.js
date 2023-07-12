@@ -12,11 +12,17 @@ exports.getAllReviewWords = async (req, res, next) => {
   }
 };
 
-// get a spefific number of review words
+// get a random spefific number of review words
 exports.getReviewWords = async (req, res, next) => {
   try {
-    const review = await Review.find().limit(parseInt(req.params.number)); 
-    res.send(review);
+    const review = await Review.find();
+    const randomWords = [];
+    for (let i = 0; i < req.params.number; i++) {
+      randomWords.push(
+        review[Math.floor(Math.random() * review.length)]
+      );
+    }
+    res.send(randomWords);
   } catch (error) {
     return next(createError(500, error.message));
   }
