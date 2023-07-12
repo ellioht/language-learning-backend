@@ -28,8 +28,19 @@ router.get('/words/random', words.getRandomWord);
 // get all review words
 router.get('/review', review.getAllReviewWords);
 
+// get a spefific number of review words
+router.get('/review/:number', review.getReviewWords);
+
 // post review words
 router.post('/review', review.postReviewWords);
 
+// delete all review words
+router.delete('/review', review.deleteAllReviewWords);
+
+// delete a review word by id
+router.delete('/review/:id', review.deleteReviewWordById);
+
+// get random review word
+router.get('/review/random', review.getRandomReviewWord);
 
 module.exports = router;

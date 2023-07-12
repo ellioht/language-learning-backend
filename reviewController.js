@@ -12,6 +12,16 @@ exports.getAllReviewWords = async (req, res, next) => {
   }
 };
 
+// get a spefific number of review words
+exports.getReviewWords = async (req, res, next) => {
+  try {
+    const review = await Review.find().limit(parseInt(req.params.number)); 
+    res.send(review);
+  } catch (error) {
+    return next(createError(500, error.message));
+  }
+};
+
 // post review words
 exports.postReviewWords = async (req, res, next) => {
   try {
