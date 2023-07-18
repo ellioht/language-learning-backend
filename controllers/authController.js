@@ -164,7 +164,7 @@ exports.setWordsLearned = async (req, res, next) => {
 
     await User.updateOne(
       { _id: req.user.id },
-      { $push: { words_learned: { $each: new_words_learned } } }
+      { $addToSet: { words_learned: { $each: new_words_learned } } }
     );
 
     res.status(200).json({
