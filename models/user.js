@@ -21,6 +21,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  words_learned: {
+    type: [String],
+    default: [],
+  },
+  words_reviewed: {
+    type: [String],
+    default: [],
+  },
 });
 
 const User = mongoose.model("User", userSchema);
