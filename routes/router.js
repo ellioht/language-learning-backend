@@ -1,46 +1,46 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const words = require('../controllers/wordsController.js');
-const review = require('../controllers/reviewController.js');
+const words = require("../controllers/wordsController.js");
+const review = require("../controllers/reviewController.js");
 
 // WORDS
 
 // get all words
-router.get('/words', words.getAllWords);
+router.get("/words", words.getAllWords);
 
 // post a word
-router.post('/words', words.postWord);
+router.post("/words", words.postWord);
 
 // post multiple words
-router.post('/words/bulk', words.postMultipleWords);
+router.post("/words/bulk", words.postMultipleWords);
 
 // delete all words
-router.delete('/words', words.deleteAllWords);
+router.delete("/words", words.deleteAllWords);
 
 // delete a word by id
-router.delete('/words/:id', words.deleteWordById);
+router.delete("/words/:id", words.deleteWordById);
 
 // get random word
-router.get('/words/random', words.getRandomWord);
+router.get("/words/random", words.getRandomWord);
 
 // REVIEWS
 
 // get all review words
-router.get('/review', review.getAllReviewWords);
+router.get("/review", review.getAllReviewWords);
 
 // get a spefific number of review words
-router.get('/review/:number', review.getReviewWords);
+router.get("/review/:number", review.getReviewWords);
 
 // post review words
-router.post('/review', review.postReviewWords);
+router.post("/review", review.postReviewWords);
 
 // delete all review words
-router.delete('/review', review.deleteAllReviewWords);
+router.delete("/review", review.deleteAllReviewWords);
 
 // delete a review word by id
-router.delete('/review/:id', review.deleteReviewWordById);
+router.delete("/review/:id", review.deleteReviewWordById);
 
 // get random review word
-router.get('/review/random', review.getRandomReviewWord);
+router.get("/review/random", review.getRandomReviewWord);
 
 module.exports = router;

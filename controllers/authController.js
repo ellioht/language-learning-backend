@@ -29,7 +29,7 @@ exports.login = async (req, res, next) => {
     if (!isMatch) {
       return next(createError(400, "Invalid credentials"));
     } else {
-      // create token 
+      // create token
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
         expiresIn: "30d",
       });
@@ -47,6 +47,8 @@ exports.login = async (req, res, next) => {
           _id: user._id,
           name: user.name,
           email: user.email,
+          signup_date: user.signup_date,
+          words_learned: user.words_learned,
         },
       });
     }
@@ -108,8 +110,82 @@ exports.signup = async (req, res, next) => {
       success: true,
       message: "User created successfully",
     });
-
   } catch (error) {
     return next(createError(500, error));
+  }
+};
+
+// PROGRESS
+
+// Check if user is authenticated
+exports.isAuthenticated = (req, res, next) => {
+  const token = req.headers["authorization"];
+  if (!token) {
+    return res.status(403).send({ error: "No token provided." });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, function (err, decoded) {
+    if (err) {
+      return res.status(500).send({ error: "Failed to authenticate token." });
+    }
+    req.user = decoded;
+    next();
+  });
+};
+
+// Get words learned (on user account)
+exports.getWordsLearned = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return next(createError(404, "User not found"));
+    }
+    // Send array of learned words
+    res.status(200).json({
+      success: true,
+      words_learned: user.words_learned,
+    });
+  } catch (error) {
+    return next(createError(500, error.message));
+  }
+};
+
+// Set words learned (on user account)
+exports.setWordsLearned = async (req, res, next) => {
+  let { new_words_learned } = req.body;
+
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return next(createError(404, "User not found"));
+    }
+
+    // push the entire new_words_learned array at once
+    await User.updateOne(
+      { _id: req.user.id },
+      { $push: { words_learned: { $each: new_words_learned } } }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Words learned updated successfully",
+    });
+  } catch (error) {
+    return next(createError(500, error.message));
+  }
+};
+
+// Delete all words learned (on user account)
+exports.clearWordsLearned = async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  if (!user) {
+    return next(createError(404, "User not found"));
+  } else {
+    user.words_learned = [];
+    await user.save();
+    res.status(200).json({
+      success: true,
+      message: "Words learned cleared successfully",
+    });
   }
 };
