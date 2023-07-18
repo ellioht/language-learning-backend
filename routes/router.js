@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const words = require('./wordsController.js');
-const review = require('./reviewController.js');
+const words = require('../controllers/wordsController.js');
+const review = require('../controllers/reviewController.js');
 
 // WORDS
 

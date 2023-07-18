@@ -1,6 +1,6 @@
 const createError = require("http-errors");
 
-const { Review } = require("./models/review.js");
+const { Review } = require("../models/review.js");
 
 // get all review words
 exports.getAllReviewWords = async (req, res, next) => {
