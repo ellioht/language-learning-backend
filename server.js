@@ -5,6 +5,7 @@ const port = process.env.PORT || 3001;
 const connectToDatabase = require("./Mongo.cjs");
 const createError = require("http-errors");
 const bodyParser = require('body-parser');
+const authRoutes = require("./routes/authRouter.js");
 
 connectToDatabase()
   .then(() => {
@@ -20,8 +21,13 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
 app.use(bodyParser.json());
 
-app.use("/api", require("./router.js"));
+app.use("/api", require("./routes/router.js"));
+app.use("/auth", authRoutes);
 
-app.get("/", cors(), (req, res) => {});
+app.get("/", cors(), (req, res) => {
+  res.send("Hello World!");
+  console.log("Hello World!");
+});
