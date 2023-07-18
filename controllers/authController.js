@@ -152,7 +152,7 @@ exports.getWordsLearned = async (req, res, next) => {
 
 // Set words learned (on user account)
 exports.setWordsLearned = async (req, res, next) => {
-  let { new_words_learned } = req.body;
+  let { new_words } = req.body;
 
   try {
     const user = await User.findById(req.user.id);
@@ -160,7 +160,8 @@ exports.setWordsLearned = async (req, res, next) => {
       return next(createError(404, "User not found"));
     }
 
-    // push the entire new_words_learned array at once
+    const new_words_learned = new_words.map((word) => ({ word }));
+
     await User.updateOne(
       { _id: req.user.id },
       { $push: { words_learned: { $each: new_words_learned } } }

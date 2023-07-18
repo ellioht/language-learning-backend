@@ -1,5 +1,16 @@
 const mongoose = require("mongoose");
 
+const wordSchema = new mongoose.Schema({
+  word: {
+    type: String,
+    required: true,
+  },
+  learned_date: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -22,11 +33,11 @@ const userSchema = new mongoose.Schema({
     default: "",
   },
   words_learned: {
-    type: [String],
+    type: [wordSchema],
     default: [],
   },
   words_reviewed: {
-    type: [String],
+    type: [wordSchema],
     default: [],
   },
 });
