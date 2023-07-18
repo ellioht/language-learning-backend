@@ -75,13 +75,13 @@ exports.logout = async (req, res, next) => {
 };
 
 exports.signup = async (req, res, next) => {
-  const { name, email, password, passwordConfirmation } = req.body;
+  const { name, email, password, confirmPass } = req.body;
 
-  if (!name || !email || !password || !passwordConfirmation) {
+  if (!name || !email || !password || !confirmPass) {
     return next(createError(400, "All fields are required"));
   }
 
-  if (password !== passwordConfirmation) {
+  if (password !== confirmPass) {
     return next(createError(400, "Passwords don't match"));
   }
 
