@@ -8,6 +8,7 @@ const connectToDatabase = require("./Mongo.cjs");
 const createError = require("http-errors");
 const bodyParser = require("body-parser");
 const authRoutes = require("./routes/authRouter.js");
+const cookieParser = require("cookie-parser");
 
 const originAdress = [
   "http://localhost:3000",
@@ -25,13 +26,15 @@ connectToDatabase()
   });
 
 app.use(cors({
-  origin: originAdress[1],
+  origin: originAdress[0],
   credentials: true,
 }));
+// app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.use("/api", require("./routes/router.js"));
 app.use("/auth", authRoutes);
