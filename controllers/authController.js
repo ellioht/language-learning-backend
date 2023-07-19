@@ -133,6 +133,8 @@ exports.isAuthenticated = (req, res, next) => {
   });
 };
 
+// LEARNED WORDS
+
 // Get words learned (on user account)
 exports.getWordsLearned = async (req, res, next) => {
   try {
@@ -187,6 +189,66 @@ exports.clearWordsLearned = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Words learned cleared successfully",
+    });
+  }
+};
+
+// REVIEWED WORDS
+
+// Get words reviewed (on user account)
+exports.getWordsReviewed = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return next(createError(404, "User not found"));
+    }
+    // Send array of reviewed words
+    res.status(200).json({
+      success: true,
+      words_reviewed: user.words_reviewed,
+    });
+  } catch (error) {
+    return next(createError(500, error.message));
+  }
+};
+
+// Set words reviewed (on user account)
+exports.setWordsReviewed = async (req, res, next) => {
+  let { new_words } = req.body;
+
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return next(createError(404, "User not found"));
+    }
+
+    const new_words_reviewed = new_words.map((word) => ({ word }));
+
+    await User.updateOne(
+      { _id: req.user.id },
+      { $addToSet: { words_reviewed: { $each: new_words_reviewed } } }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Words reviewed updated successfully",
+    });
+  } catch (error) {
+    return next(createError(500, error.message));
+  }
+};
+
+// Delete all words reviewed (on user account)
+exports.clearWordsReviewed = async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  if (!user) {
+    return next(createError(404, "User not found"));
+  } else {
+    user.words_reviewed = [];
+    await user.save();
+    res.status(200).json({
+      success: true,
+      message: "Words reviewed cleared successfully",
     });
   }
 };
