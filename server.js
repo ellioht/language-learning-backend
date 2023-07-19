@@ -10,7 +10,8 @@ const bodyParser = require("body-parser");
 const authRoutes = require("./routes/authRouter.js");
 
 const originAdress = [
-  "http://localhost:3000"
+  "http://localhost:3000",
+  "*"
 ];
 
 connectToDatabase()
@@ -24,7 +25,7 @@ connectToDatabase()
   });
 
 app.use(cors({
-  origin: originAdress[0],
+  origin: originAdress[1],
   credentials: true,
 }));
 app.use(express.json());
