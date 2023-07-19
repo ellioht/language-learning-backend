@@ -9,6 +9,11 @@ const createError = require("http-errors");
 const bodyParser = require("body-parser");
 const authRoutes = require("./routes/authRouter.js");
 
+const serverAdress = [
+  "https://language-api-sogu.onrender.com",
+  "http://localhost:3001"
+];
+
 connectToDatabase()
   .then(() => {
     app.listen(port, () => {
@@ -19,7 +24,10 @@ connectToDatabase()
     console.error("Failed to connect to the database:", error);
   });
 
-app.use(cors());
+app.use(cors({
+  origin: serverAdress[0],
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
