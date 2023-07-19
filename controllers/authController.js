@@ -39,7 +39,7 @@ exports.login = async (req, res, next) => {
       await user.save();
 
       // set token as a cookie
-      res.cookie("token", token, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 });
+      res.cookie("token", token, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000, sameSite: "none", secure: true });
 
       // send response with token and user info
       res.status(200).json({
