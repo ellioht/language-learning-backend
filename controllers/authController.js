@@ -170,17 +170,31 @@ exports.setWordsLearned = async (req, res, next) => {
       return next(createError(404, "User not found"));
     }
 
-    const new_words_learned = new_words.map((word) => ({ word }));
+    const new_words_learned = new_words
+      .filter((word) => {
+        // Check if word already exists in words_learned array
+        return !user.words_learned.some(
+          (learnedWord) => learnedWord.word === word
+        );
+      })
+      .map((word) => ({ word }));
 
-    await User.updateOne(
-      { _id: req.user.id },
-      { $addToSet: { words_learned: { $each: new_words_learned } } }
-    );
+    if (new_words_learned.length > 0) {
+      await User.updateOne(
+        { _id: req.user.id },
+        { $addToSet: { words_learned: { $each: new_words_learned } } }
+      );
 
-    res.status(200).json({
-      success: true,
-      message: "Words learned updated successfully",
-    });
+      res.status(200).json({
+        success: true,
+        message: "Words learned updated successfully",
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        message: "No new words learned",
+      });
+    }
   } catch (error) {
     return next(createError(500, error.message));
   }
