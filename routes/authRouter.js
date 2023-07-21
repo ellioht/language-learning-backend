@@ -1,9 +1,12 @@
 const router = require("express").Router();
 const auth = require("../controllers/authController");
+const authChecker = require("../middleware/authChecker");
 
-router.post("/login", auth.login);
+router.post("/login", authChecker, auth.login);
 router.post("/signup", auth.signup);
 router.post("/logout", auth.logout);
+
+// router.post("/user", authChecker, auth.getUser);
 
 // Learn words
 router.get("/progress/learned", auth.isAuthenticated, auth.getWordsLearned);
