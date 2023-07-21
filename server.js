@@ -29,6 +29,8 @@ app.use(cors({
   origin: originAdress[0],
   credentials: true,
 }));
+
+
 // app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -6,6 +6,8 @@ const createError = require("http-errors");
 exports.login = async (req, res, next) => {
   const { email, password } = req.body;
 
+  console.log("logging in");
+
   // check if email exists
   if (!email) {
     return next(createError(400, "Email is required"));
@@ -29,25 +31,26 @@ exports.login = async (req, res, next) => {
     if (!isMatch) {
       return next(createError(400, "Invalid credentials"));
     } else {
+      console.log("password matches");
       // create token
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
         expiresIn: "30d",
       });
 
       user.token = token;
-
+      console.log(user.token);
       await user.save();
 
       // set token as a cookie
-      res.cookie("token", token, {
-        httpOnly: true,
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-        sameSite: "none",
-        secure: true,
-      });
-
+      // res.cookie("token", token, {
+      //   httpOnly: true,
+      //   maxAge: 30 * 24 * 60 * 60 * 1000,
+      //   sameSite: "none",
+      //   secure: true,
+      // });
+      
       // send response with token and user info
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         message: "User logged in successfully",
         token: token,
