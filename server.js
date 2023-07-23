@@ -1,13 +1,11 @@
 require("dotenv").config();
-
 const express = require("express");
 const cors = require("cors");
-const app = express();
 const port = process.env.PORT || 3001;
 const connectToDatabase = require("./Mongo.cjs");
-const createError = require("http-errors");
 const bodyParser = require("body-parser");
 const authRoutes = require("./routes/authRouter.js");
+const learnRoutes = require("./routes/learnRouter.js");
 const cookieParser = require("cookie-parser");
 
 const originAdress = [
@@ -15,6 +13,10 @@ const originAdress = [
   "*"
 ];
 
+// Initialize Express
+const app = express();
+
+// Connect to the Mongo DB
 connectToDatabase()
   .then(() => {
     app.listen(port, () => {
@@ -25,21 +27,20 @@ connectToDatabase()
     console.error("Failed to connect to the database:", error);
   });
 
+  // Middleware
 app.use(cors({
   origin: originAdress[0],
   credentials: true,
 }));
-
-
-// app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
+app.use(express.json()); // Allows us to parse JSON in request bodies (req.body)
+app.use(cookieParser()); // Allows us to parse cookies in request headers (req.cookies)
+app.use(express.urlencoded({ extended: true })); // Allows us to parse URL-encoded request bodies (req.body)
 app.use(bodyParser.json());
-app.use(cookieParser());
 
-app.use("/api", require("./routes/router.js"));
+// Routes
+app.use("/api", require("./routes/reviewRouter.js"));
 app.use("/auth", authRoutes);
+app.use("/auth", learnRoutes);
 
 app.get("/", cors(), (req, res) => {
   res.send("Hello World!");
