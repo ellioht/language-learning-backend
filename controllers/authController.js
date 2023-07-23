@@ -2,81 +2,95 @@ const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const createError = require("http-errors");
+const { hashPassword, comparePassword } = require('../helpers/auth');
 
+// Get user endpoint
+exports.getUser = async (req, res, next) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.json(null);
+  } else {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await User.findById(decoded);
+      return res.json(user);
+    } catch (error) {
+      return next(createError(500, error));
+    }
+  }
+};
+
+// Login user endpoint
 exports.login = async (req, res, next) => {
   const { email, password } = req.body;
-
-  console.log("logging in");
-
   // check if email exists
   if (!email) {
     return next(createError(400, "Email is required"));
   }
-
   // check if password exists
   if (!password) {
     return next(createError(400, "Password is required"));
   }
-
   try {
     // check if user exists in database and select password field to compare
     const user = await User.findOne({ email }).select("+password");
-    const isMatch = await bcrypt.compare(password, user.password);
-
+    const isMatch = await comparePassword(password, user.password); // Compare password with hashed password in database
     if (!user) {
       return next(createError(400, "Invalid credentials"));
     }
-
     // check if password matches
     if (!isMatch) {
       return next(createError(400, "Invalid credentials"));
     } else {
-      console.log("password matches");
       // create token
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "30d",
-      });
-
+      const token = jwt.sign({ _id: user._id, email: user.email, name: user.name }, process.env.JWT_SECRET, { expiresIn: '7d' });
+      // Save token to database
       user.token = token;
-      console.log(user.token);
       await user.save();
-
-      // set token as a cookie
-      // res.cookie("token", token, {
-      //   httpOnly: true,
-      //   maxAge: 30 * 24 * 60 * 60 * 1000,
-      //   sameSite: "none",
-      //   secure: true,
-      // });
-      
-      // send response with token and user info
-      return res.status(200).json({
-        success: true,
-        message: "User logged in successfully",
-        token: token,
-        user: {
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          signup_date: user.signup_date,
-          words_learned: user.words_learned,
-        },
+      // Return user and token to client, exclude hashed password
+      user.password = undefined;
+      // Send token in HTTP-only cookie
+      res.cookie("token", token, {
+        httpOnly: true,
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        sameSite: "none",
+        secure: true,
       });
+      res.json(user);
+      // send response with token and user info
+      // return res.status(200).json({
+      //   success: true,
+      //   message: "User logged in successfully",
+      //   token: token,
+      //   user: {
+      //     _id: user._id,
+      //     name: user.name,
+      //     email: user.email,
+      //     signup_date: user.signup_date,
+      //     words_learned: user.words_learned,
+      //   },
+      // });
     }
   } catch (error) {
     return next(createError(500, error));
   }
 };
 
+// Logout user endpoint
 exports.logout = async (req, res, next) => {
   const { id } = req.body;
 
   try {
     const user = await User.findById(id);
 
-    user.token = "";
+    // Remove token from database
+    if (user.token !== null) {
+      user.token = "";
+      await user.save();
+    }
 
-    await user.save();
+    // Remove token from cookie
+    res.clearCookie('token');
 
     res.status(200).json({
       success: true,
@@ -87,15 +101,22 @@ exports.logout = async (req, res, next) => {
   }
 };
 
+// Signup user endpoint
 exports.signup = async (req, res, next) => {
-  const { name, email, password, confirmPass } = req.body;
+  const { name, email, password } = req.body;
 
-  if (!name || !email || !password || !confirmPass) {
+  if (!name || !email || !password) {
     return next(createError(400, "All fields are required"));
   }
 
-  if (password !== confirmPass) {
-    return next(createError(400, "Passwords don't match"));
+  // if (password !== confirmPass) {
+  //   return next(createError(400, "Passwords don't match"));
+  // }
+
+  if (!password || password.length < 6) {
+    return next(
+      createError(400, "Password must be at least 6 characters long")
+    );
   }
 
   try {
@@ -103,177 +124,34 @@ exports.signup = async (req, res, next) => {
     if (user) {
       return next(createError(400, "User already exists"));
     }
-    const newUser = new User({
-      name,
-      email,
-      password,
-    });
 
     // hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await hashPassword(password);
 
-    newUser.password = hashedPassword;
-
+    // Create new user
+    const newUser = await User.create({ name, email, password: hashedPassword });
     await newUser.save();
-
-    return res.status(200).json({
-      success: true,
-      message: "User created successfully",
-    });
+    // Return new user
+    return res.json(newUser);
   } catch (error) {
     return next(createError(500, error));
   }
 };
 
-// PROGRESS
+// Delete user endpoint
+exports.deleteUser = async (req, res, next) => {
+  const { id } = req.params;
 
-// Check if user is authenticated
-exports.isAuthenticated = (req, res, next) => {
-  const token = req.headers["authorization"];
-  if (!token) {
-    return res.status(403).send({ error: "No token provided." });
-  }
-
-  jwt.verify(token, process.env.JWT_SECRET, function (err, decoded) {
-    if (err) {
-      return res.status(500).send({ error: "Failed to authenticate token." });
-    }
-    req.user = decoded;
-    next();
-  });
-};
-
-// LEARNED WORDS
-
-// Get words learned (on user account)
-exports.getWordsLearned = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findByIdAndDelete(id);
     if (!user) {
       return next(createError(404, "User not found"));
     }
-    // Send array of learned words
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      words_learned: user.words_learned,
+      message: "User deleted successfully",
     });
   } catch (error) {
-    return next(createError(500, error.message));
-  }
-};
-
-// Set words learned (on user account)
-exports.setWordsLearned = async (req, res, next) => {
-  let { new_words } = req.body;
-
-  try {
-    const user = await User.findById(req.user.id);
-    if (!user) {
-      return next(createError(404, "User not found"));
-    }
-
-    const new_words_learned = new_words
-      .filter((word) => {
-        // Check if word already exists in words_learned array
-        return !user.words_learned.some(
-          (learnedWord) => learnedWord.word === word
-        );
-      })
-      .map((word) => ({ word }));
-
-    if (new_words_learned.length > 0) {
-      await User.updateOne(
-        { _id: req.user.id },
-        { $addToSet: { words_learned: { $each: new_words_learned } } }
-      );
-
-      res.status(200).json({
-        success: true,
-        message: "Words learned updated successfully",
-      });
-    } else {
-      res.status(200).json({
-        success: true,
-        message: "No new words learned",
-      });
-    }
-  } catch (error) {
-    return next(createError(500, error.message));
-  }
-};
-
-// Delete all words learned (on user account)
-exports.clearWordsLearned = async (req, res, next) => {
-  const user = await User.findById(req.user.id);
-  if (!user) {
-    return next(createError(404, "User not found"));
-  } else {
-    user.words_learned = [];
-    await user.save();
-    res.status(200).json({
-      success: true,
-      message: "Words learned cleared successfully",
-    });
-  }
-};
-
-// REVIEWED WORDS
-
-// Get words reviewed (on user account)
-exports.getWordsReviewed = async (req, res, next) => {
-  try {
-    const user = await User.findById(req.user.id);
-    if (!user) {
-      return next(createError(404, "User not found"));
-    }
-    // Send array of reviewed words
-    res.status(200).json({
-      success: true,
-      words_reviewed: user.words_reviewed,
-    });
-  } catch (error) {
-    return next(createError(500, error.message));
-  }
-};
-
-// Set words reviewed (on user account)
-exports.setWordsReviewed = async (req, res, next) => {
-  let { new_words } = req.body;
-
-  try {
-    const user = await User.findById(req.user.id);
-    if (!user) {
-      return next(createError(404, "User not found"));
-    }
-
-    const new_words_reviewed = new_words.map((word) => ({ word }));
-
-    await User.updateOne(
-      { _id: req.user.id },
-      { $addToSet: { words_reviewed: { $each: new_words_reviewed } } }
-    );
-
-    res.status(200).json({
-      success: true,
-      message: "Words reviewed updated successfully",
-    });
-  } catch (error) {
-    return next(createError(500, error.message));
-  }
-};
-
-// Delete all words reviewed (on user account)
-exports.clearWordsReviewed = async (req, res, next) => {
-  const user = await User.findById(req.user.id);
-  if (!user) {
-    return next(createError(404, "User not found"));
-  } else {
-    user.words_reviewed = [];
-    await user.save();
-    res.status(200).json({
-      success: true,
-      message: "Words reviewed cleared successfully",
-    });
+    return next(createError(500, error));
   }
 };
