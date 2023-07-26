@@ -8,10 +8,7 @@ const authRoutes = require("./routes/authRouter.js");
 const learnRoutes = require("./routes/learnRouter.js");
 const cookieParser = require("cookie-parser");
 
-const originAdress = [
-  "http://localhost:3000",
-  "*"
-];
+const originAdress = ["http://localhost:3000", "*"];
 
 // Initialize Express
 const app = express();
@@ -27,11 +24,13 @@ connectToDatabase()
     console.error("Failed to connect to the database:", error);
   });
 
-  // Middleware
-app.use(cors({
-  origin: originAdress[0],
-  credentials: true,
-}));
+// Middleware
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "http://localhost:3001", "https://language-learning-app.onrender.com/"],
+    credentials: true,
+  })
+);
 app.use(express.json()); // Allows us to parse JSON in request bodies (req.body)
 app.use(cookieParser()); // Allows us to parse cookies in request headers (req.cookies)
 app.use(express.urlencoded({ extended: true })); // Allows us to parse URL-encoded request bodies (req.body)
