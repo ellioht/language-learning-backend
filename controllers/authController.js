@@ -13,6 +13,7 @@ exports.getUser = async (req, res, next) => {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const user = await User.findById(decoded);
+      user.password = undefined;
       return res.json(user);
     } catch (error) {
       return next(createError(500, error));
