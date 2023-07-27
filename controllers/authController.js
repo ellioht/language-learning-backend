@@ -6,6 +6,7 @@ const { hashPassword, comparePassword } = require('../helpers/auth');
 
 // Get user endpoint
 exports.getUser = async (req, res, next) => {
+  console.log("Get user");
   const token = req.cookies.token;
   if (!token) {
     return res.json(null);
