@@ -12,8 +12,8 @@ router.delete(
 );
 
 // Review words
-router.get("/progress/reviewed", learn.isAuthenticated, learn.getWordsReviewed);
-router.post("/setwordsreviewed", learn.isAuthenticated, learn.setWordsReviewed);
+router.get("/progress/reviewed", learn.getWordsReviewed);
+router.post("/setwordsreviewed", learn.setWordsReviewed);
 router.delete(
   "/clearwordsreviewed",
   learn.isAuthenticated,
