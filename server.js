@@ -8,7 +8,7 @@ const authRoutes = require("./routes/authRouter.js");
 const learnRoutes = require("./routes/learnRouter.js");
 const cookieParser = require("cookie-parser");
 
-const originAdress = ["http://localhost:3000", "*"];
+const originAdress = ["http://localhost:3000", "https://language-learning-app.onrender.com"];
 
 // Initialize Express
 const app = express();
@@ -27,7 +27,7 @@ connectToDatabase()
 // Middleware
 app.use(
   cors({
-    origin: "https://language-learning-app.onrender.com",
+    origin: "http://localhost:3000",
     credentials: true,
   })
 );

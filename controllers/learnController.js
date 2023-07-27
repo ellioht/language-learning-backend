@@ -42,10 +42,11 @@ exports.getWordsLearned = async (req, res, next) => {
 
 // Set words learned (on user account)
 exports.setWordsLearned = async (req, res, next) => {
-  let { new_words } = req.body;
+  const { new_words, user } = req.body;
+  console.log(req.body);
 
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.body._id);
     if (!user) {
       return next(createError(404, "User not found"));
     }
