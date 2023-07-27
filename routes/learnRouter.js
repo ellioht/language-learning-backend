@@ -16,7 +16,7 @@ router.get("/progress/reviewed", learn.getWordsReviewed);
 router.post("/setwordsreviewed", learn.setWordsReviewed);
 router.delete(
   "/clearwordsreviewed",
-  learn.isAuthenticated,
+  
   learn.clearWordsReviewed
 );
 

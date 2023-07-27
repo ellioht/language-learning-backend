@@ -60,9 +60,14 @@ exports.deleteWordById = async (req, res, next) => {
 // get a random word in database
 exports.getRandomWord = async (req, res, next) => {
   try {
-    const words = await Words.find();
-    const randomWord = words[Math.floor(Math.random() * words.length)];
-    res.send(randomWord);
+    const now = new Date();
+    const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+    const formattedDate = now.toLocaleDateString('en-US', options);
+    const response = {
+      wordOfTheDay: req.wordOfTheDay,
+      date: formattedDate,
+    };
+    res.send(response);
   } catch (error) {
     return next(createError(500, error.message));
   }

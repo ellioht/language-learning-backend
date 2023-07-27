@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const words = require("../controllers/wordsController.js");
 const review = require("../controllers/reviewController.js");
+const checkLastAccess = require("../middleware/lastAccess.js");
 
 // WORDS
 
@@ -20,8 +21,8 @@ router.delete("/words", words.deleteAllWords);
 // delete a word by id
 router.delete("/words/:id", words.deleteWordById);
 
-// get random word
-router.get("/words/random", words.getRandomWord);
+// get random word (Word of the day)
+router.get("/words/random", checkLastAccess, words.getRandomWord);
 
 // REVIEWS
 

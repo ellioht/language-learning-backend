@@ -53,6 +53,8 @@ exports.getWordsLearned = async (req, res, next) => {
 exports.setWordsLearned = async (req, res, next) => {
   let { new_words, user } = req.body;
 
+  console.log(req.body);
+
   if (!user || !user._id) {
     return next(createError(400, "User ID is required"));
   }
