@@ -42,18 +42,22 @@ exports.getWordsLearned = async (req, res, next) => {
 
 // Set words learned (on user account)
 exports.setWordsLearned = async (req, res, next) => {
-  let { new_words } = req.body;
+  let { new_words, user } = req.body;
+
+  if (!user || !user._id) {
+    return next(createError(400, "User ID is required"));
+  }
 
   try {
-    const user = await User.findById(req.user.id);
-    if (!user) {
+    const existingUser = await User.findById(user._id);
+    if (!existingUser) {
       return next(createError(404, "User not found"));
     }
 
     const new_words_learned = new_words.map((word) => ({ word }));
 
     await User.updateOne(
-      { _id: req.user.id },
+      { _id: user._id },
       { $addToSet: { words_learned: { $each: new_words_learned } } }
     );
 
