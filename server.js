@@ -27,7 +27,7 @@ connectToDatabase()
 // Middleware
 app.use(
   cors({
-    origin: "https://language-learning-app.onrender.com",
+    origin: "http://localhost:3000",
     credentials: true,
   })
 );
