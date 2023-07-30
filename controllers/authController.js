@@ -15,6 +15,9 @@ exports.getUser = async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const user = await User.findById(decoded);
       user.password = undefined;
+      // Set the cache-control header to prevent caching
+      res.setHeader('Cache-Control', 'no-cache');
+      console.log("set no cache");
       return res.json(user);
     } catch (error) {
       return next(createError(500, error));
@@ -81,15 +84,27 @@ exports.login = async (req, res, next) => {
 // Logout user endpoint
 exports.logout = async (req, res, next) => {
   const { id } = req.body;
+  console.log(id);
 
   try {
     const user = await User.findById(id);
+
+    if (!user) {
+      return next(createError(404, "User not found"));
+    }
+
+    // Remove words learned from database
+    if (user.words_learned) {
+      user.words_learned = [];
+    }
 
     // Remove token from database
     if (user.token !== null) {
       user.token = "";
       await user.save();
     }
+
+    console.log("user saved");
 
     // Remove token from cookie
     res.clearCookie('token');

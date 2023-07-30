@@ -22,7 +22,7 @@ router.delete("/words", words.deleteAllWords);
 router.delete("/words/:id", words.deleteWordById);
 
 // get random word (Word of the day)
-router.get("/words/random", checkLastAccess, words.getRandomWord);
+router.get("/words/random", words.getRandomWord);
 
 // REVIEWS
 
