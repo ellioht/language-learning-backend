@@ -8,14 +8,20 @@ const { hashPassword, comparePassword } = require('../helpers/auth');
 exports.getUser = async (req, res, next) => {
   console.log("Get user");
   const token = req.cookies.token;
-  const dbtoken = req.user.token;
-  if (!token || !dbtoken) {
+  if (!token) {
     return res.json(null);
   } else {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const user = await User.findById(decoded);
+
+      const dbtoken = user.token;
+      if (token !== dbtoken) {
+        return res.json(null);
+      }
+
       user.password = undefined;
+      
       // Set the cache-control header to prevent caching
       res.setHeader('Cache-Control', 'no-cache');
       console.log("set no cache");
