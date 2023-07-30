@@ -8,7 +8,8 @@ const { hashPassword, comparePassword } = require('../helpers/auth');
 exports.getUser = async (req, res, next) => {
   console.log("Get user");
   const token = req.cookies.token;
-  if (!token) {
+  const dbtoken = req.user.token;
+  if (!token || !dbtoken) {
     return res.json(null);
   } else {
     try {
