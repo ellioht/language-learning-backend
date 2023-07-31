@@ -4,10 +4,6 @@ This is the back-end for a Language Learning App. The full-stack language learni
 Link to front end:
 https://github.com/CodeByCalvin/languagelearningapp-frontend-
 <br>
-## Media:
-<br>
-![chrome_ty6nsWxSjH](https://github.com/ellioht/language-learning-backend/assets/130664947/b53dc133-7c56-4fb3-a0ea-633c3aea7455)
-<br>
 ## Features:
 - Login / Register user
 - Word of the day using back-end word data
