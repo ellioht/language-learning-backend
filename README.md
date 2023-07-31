@@ -6,7 +6,7 @@ https://github.com/CodeByCalvin/languagelearningapp-frontend-
 <br>
 ## Media:
 <br>
-![languageapp](https://github.com/ellioht/language-learning-backend/assets/130664947/d16e1442-3553-4fdd-a745-b41950313659)
+![chrome_ty6nsWxSjH](https://github.com/ellioht/language-learning-backend/assets/130664947/b53dc133-7c56-4fb3-a0ea-633c3aea7455)
 <br>
 ## Features:
 - Login / Register user
