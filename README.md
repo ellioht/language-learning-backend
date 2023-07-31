@@ -10,15 +10,16 @@ https://github.com/CodeByCalvin/languagelearningapp-frontend-
 - Review, a game like mode for practicing your language learning skills. This game has multiple modes such as true or false, multiple choice, and match the word.
 - User settings.
 <br>
-##Media: (in development)
-![chrome_dwvxhXIj6x](https://github.com/ellioht/language-learning-backend/assets/130664947/637daa8f-2788-4940-980b-127b7946a2b4)
+## Media: (in development)
+![languageapp](https://github.com/ellioht/language-learning-backend/assets/130664947/62f53ec6-e542-4eb1-bc93-0c0b90214cf1)
+
 <br>
-##Technologies:
+## Technologies:
 - Node
 - Express
 - mongoose
 - jsonwebtoken
 - bcrypt
 <br>
-###Live Deployment:
+### Live Deployment:
 https://language-learning-app.onrender.com/
