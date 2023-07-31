@@ -11,9 +11,13 @@ https://github.com/CodeByCalvin/languagelearningapp-frontend-
 - User settings.
 ##Media: (in development)
 ![chrome_dwvxhXIj6x](https://github.com/ellioht/language-learning-backend/assets/130664947/637daa8f-2788-4940-980b-127b7946a2b4)
+<br>
 ##Technologies:
 - Node
 - Express
 - mongoose
 - jsonwebtoken
 - bcrypt
+<br>
+###Live Deployment:
+https://language-learning-app.onrender.com/
